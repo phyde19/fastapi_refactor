@@ -46,21 +46,16 @@ ADMIN_ROLE_MAP: dict[str, str] = {
 def get_user_roles(session_db, user_email: str) -> list[str]:
     """
     Read role data from Redis session store.
-
-    In DEV, if role lookup fails or returns empty, fall back to DEFAULT_DEV_ROLES.
     """
     roles: list[str] = []
     try:
         raw = session_db.hget(user_email, "roles") or ""
         roles = [role.strip() for role in raw.split(",") if role.strip()]
     except Exception:  # pragma: no cover - depends on runtime Redis availability
-        logger.exception("Role lookup failed for user=%s; falling back if possible", user_email)
+        logger.exception("Role lookup failed for user=%s", user_email)
 
     if roles:
         return roles
-
-    if settings.is_dev:
-        return settings.default_dev_roles_list
 
     return []
 

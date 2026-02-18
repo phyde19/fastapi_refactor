@@ -1,5 +1,4 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_COMPASS_API_BASE_URL ?? "http://localhost:8000";
-const DEFAULT_USER_EMAIL = process.env.NEXT_PUBLIC_DEV_USER_EMAIL ?? "dev.user@local.test";
 
 class HttpError extends Error {
   status: number;
@@ -13,18 +12,9 @@ class HttpError extends Error {
   }
 }
 
-function resolveUserEmail() {
-  if (typeof window === "undefined") {
-    return DEFAULT_USER_EMAIL;
-  }
-  const fromStorage = window.localStorage.getItem("compass_user_email");
-  return fromStorage || DEFAULT_USER_EMAIL;
-}
-
 function createHeaders(extra?: Record<string, string>) {
   return {
     "Content-Type": "application/json",
-    "X-User-Email": resolveUserEmail(),
     ...extra
   };
 }

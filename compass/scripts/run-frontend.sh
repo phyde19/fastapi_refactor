@@ -20,6 +20,5 @@ podman run \
   -v "$PROJECT_ROOT/frontend:/app:Z" \
   -w /app \
   -e NEXT_PUBLIC_COMPASS_API_BASE_URL="${NEXT_PUBLIC_COMPASS_API_BASE_URL:-http://localhost:$BACKEND_PORT}" \
-  -e NEXT_PUBLIC_DEV_USER_EMAIL="${NEXT_PUBLIC_DEV_USER_EMAIL:-dev@local.test}" \
   compass-refactor-frontend:dev \
   npm run dev -- -H "$FRONTEND_HOST" -p "$FRONTEND_PORT"

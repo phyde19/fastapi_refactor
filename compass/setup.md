@@ -24,7 +24,10 @@ Optional:
 - `SERVICE_URL_*` mappings (highest precedence for service resolution)
 - `FRONTEND_URL`, `FRONTEND_URL_ALT`
 - `NEXT_PUBLIC_COMPASS_API_BASE_URL`
-- `NEXT_PUBLIC_DEV_USER_EMAIL`
+
+Identity:
+- User identity is extracted from the bearer auth token claims.
+- No local email fallback env variables are used.
 
 ## Local files
 

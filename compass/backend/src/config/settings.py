@@ -16,8 +16,6 @@ class Settings(BaseSettings):
 
     api_name: str = "Compass API (Refactor)"
     enforce_role_checks: bool = True
-    default_dev_user_email: str = "dev@local.test"
-    default_dev_roles: str = "SuperAdmins"
 
     # Primary environment switch
     compass_env: CompassEnv = "DEV"
@@ -51,10 +49,6 @@ class Settings(BaseSettings):
     @property
     def is_dev(self) -> bool:
         return self.compass_env == "DEV"
-
-    @property
-    def default_dev_roles_list(self) -> list[str]:
-        return [role.strip() for role in self.default_dev_roles.split(",") if role.strip()]
 
     @field_validator("compass_env", mode="before")
     @classmethod

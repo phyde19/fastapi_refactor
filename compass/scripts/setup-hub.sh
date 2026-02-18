@@ -46,7 +46,7 @@ copy_if_missing "$SERVICES_EXAMPLE" "$SERVICES_FILE" "services.local.json"
 copy_if_missing "$PLUGINS_EXAMPLE" "$PLUGINS_FILE" "plugins.local.json"
 
 # Apply quick-start defaults every run (safe, deterministic).
-python - "$ENV_FILE" "$MODE" <<'PY'
+python3 - "$ENV_FILE" "$MODE" <<'PY'
 from pathlib import Path
 import re
 import sys
