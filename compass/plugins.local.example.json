@@ -1,0 +1,60 @@
+{
+  "plugins": [
+    {
+      "plugin_id": "compass_assistant",
+      "plugin_name": "Compass Assistant",
+      "workspace_id": "general",
+      "workspace_name": "General",
+      "workspace_description": "Common AI capabilities",
+      "description": "General assistant for Compass users.",
+      "instructions": "You are Compass Assistant. Be concise, useful, and accurate.",
+      "conversation_seed": [
+        {
+          "role": "user",
+          "content": "What can you help me with?"
+        }
+      ],
+      "user_inputs": [
+        {
+          "name": "mode",
+          "type": "select",
+          "label": "Response mode",
+          "required": false,
+          "options": [
+            "summary",
+            "detailed"
+          ]
+        }
+      ],
+      "service_key": "compass_plugins",
+      "service_type": "external",
+      "plugin_type": "general",
+      "position": 1,
+      "enabled": true
+    },
+    {
+      "plugin_id": "dscoe_search_assistant",
+      "plugin_name": "DSCOE Search Assistant",
+      "workspace_id": "dscoe",
+      "workspace_name": "DSCOE",
+      "workspace_description": "Data science center capabilities",
+      "description": "Search through DSCOE knowledge and provide cited answers.",
+      "instructions": "Use provided citations when available. Mention uncertainty clearly.",
+      "conversation_seed": [],
+      "user_inputs": [
+        {
+          "name": "include_citations",
+          "type": "toggle",
+          "label": "Include citations",
+          "required": false,
+          "default": true
+        }
+      ],
+      "service_key": "compass_plugins",
+      "service_type": "external",
+      "plugin_type": "document_search_assistant",
+      "position": 2,
+      "enabled": true
+    }
+  ]
+}

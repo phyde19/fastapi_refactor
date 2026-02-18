@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 35 25% 96%;
+    --foreground: 30 10% 25%;
+    --primary: 200 65% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 30 20% 90%;
+    --secondary-foreground: 30 10% 25%;
+    --muted: 30 15% 92%;
+    --muted-foreground: 30 10% 40%;
+    --accent: 200 60% 50%;
+    --accent-foreground: 0 0% 100%;
+    --border: 30 15% 85%;
+    --card: 35 25% 98%;
+    --card-foreground: 30 10% 25%;
+    --sidebar-background: 35 25% 92%;
+    --compass-blue: 200 60% 50%;
+    --compass-blue-foreground: 0 0% 100%;
+  }
+
+  .dark {
+    --background: 200 5% 10%;
+    --foreground: 210 10% 92%;
+    --primary: 200 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 6% 18%;
+    --secondary-foreground: 210 10% 92%;
+    --muted: 200 5% 16%;
+    --muted-foreground: 210 5% 70%;
+    --accent: 200 60% 45%;
+    --accent-foreground: 0 0% 100%;
+    --border: 200 5% 20%;
+    --card: 200 5% 14%;
+    --card-foreground: 210 10% 92%;
+    --sidebar-background: 200 8% 6%;
+    --compass-blue: 200 60% 40%;
+    --compass-blue-foreground: 0 0% 100%;
+  }
+}
+
+body {
+  @apply bg-background text-foreground min-h-screen transition-colors duration-300;
+  background-image: radial-gradient(hsla(30, 30%, 40%, 0.08) 1px, transparent 1px);
+  background-size: 25px 25px;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+.dark body {
+  background-image: radial-gradient(hsla(30, 30%, 60%, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+@layer components {
+  .panel {
+    @apply border border-border bg-card text-card-foreground rounded-xl;
+  }
+
+  .section-title {
+    @apply text-xs uppercase tracking-wide text-muted-foreground font-semibold;
+  }
+}

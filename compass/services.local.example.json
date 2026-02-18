@@ -1,0 +1,12 @@
+{
+  "services": [
+    {
+      "service_key": "compass_plugins",
+      "service_url": "http://localhost:5002"
+    },
+    {
+      "service_key": "my_team_plugins",
+      "service_url": "http://localhost:5050"
+    }
+  ]
+}
