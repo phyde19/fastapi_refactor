@@ -7,10 +7,7 @@ Supported sources:
   - overlay:    Databricks + local overlay (local wins by ws/plugin key)
 """
 
-from __future__ import annotations
-
 import json
-import logging
 from collections import OrderedDict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,8 +17,6 @@ import redis
 
 from config.settings import settings
 from plugin_registry.models import PluginRecord, PluginUpdate, WorkspaceGroup
-
-logger = logging.getLogger("compass.plugin_registry")
 
 
 CACHE_READY_KEY = "plugins_config_ready"
@@ -178,7 +173,6 @@ class PluginRegistry:
         """
 
         self._execute(query, params)
-        logger.info("Updated plugin %s/%s by %s", workspace_id, plugin_id, updated_by)
 
         updated_record = self._read_one_from_db(workspace_id, plugin_id)
         self._cache_one(updated_record)
@@ -191,14 +185,12 @@ class PluginRegistry:
     def invalidate_cache(self) -> None:
         if self._source == "local":
             self._local_cache_mtime = None
-            logger.info("Local plugin registry cache invalidated")
             return
 
         if self._redis is None:
             return
 
         self._redis.delete(CACHE_READY_KEY)
-        logger.info("Databricks plugin registry cache invalidated")
 
     def warm_cache(self) -> int:
         if self._source == "local":
@@ -277,7 +269,6 @@ class PluginRegistry:
         self._local_cache_index = {(p.workspace_id, p.plugin_id): p for p in plugins}
         self._local_cache_mtime = mtime
 
-        logger.info("Loaded %d plugins from local registry file %s", len(plugins), local_path)
         return list(self._local_cache)
 
     @staticmethod
@@ -330,7 +321,6 @@ class PluginRegistry:
         for plugin in plugins:
             self._cache_one(plugin)
         self._redis.set(CACHE_READY_KEY, datetime.now(timezone.utc).isoformat())
-        logger.info("Plugin registry cache hydrated: %d plugins", len(plugins))
         return len(plugins)
 
     def _cache_one(self, plugin: PluginRecord) -> None:

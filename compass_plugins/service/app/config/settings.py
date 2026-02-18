@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pathlib import Path
 
 from pydantic import field_validator
@@ -26,7 +24,7 @@ class Settings(BaseSettings):
     allow_mock_llm: bool = True
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).parent.parent.parent / ".env",
+        env_file=Path(__file__).parent.parent.parent.parent / ".env",
         case_sensitive=False,
         extra="ignore",
     )

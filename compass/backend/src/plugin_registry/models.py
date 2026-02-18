@@ -5,8 +5,6 @@ Single source of truth for all plugin-related data structures in the backend.
 Every router and service should use these models.
 """
 
-from __future__ import annotations
-
 import json
 from datetime import datetime
 from typing import Any, Optional

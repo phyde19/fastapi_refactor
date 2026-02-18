@@ -1,13 +1,8 @@
-from __future__ import annotations
-
 import json
-import logging
 import os
 from pathlib import Path
 
 from config.settings import settings
-
-logger = logging.getLogger("compass.service_resolver")
 
 
 class ServiceResolverError(ValueError):
@@ -69,11 +64,6 @@ class ServiceResolver:
     def _load_dev_file(self) -> None:
         services_path = _resolve_path(settings.plugin_services_local_file)
         if not services_path.exists():
-            logger.warning(
-                "No local services file found at '%s'. "
-                "Only SERVICE_URL_* env vars will be used.",
-                services_path,
-            )
             return
 
         try:

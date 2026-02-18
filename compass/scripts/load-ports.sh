@@ -20,6 +20,8 @@ fi
 export BACKEND_PORT=$((8000 + PORT_OFFSET))
 export REDIS_PORT=$((6000 + PORT_OFFSET))
 export FRONTEND_PORT=$((3000 + PORT_OFFSET))
+export FRONTEND_URL="http://localhost:$FRONTEND_PORT"
+export NEXT_PUBLIC_COMPASS_API_BASE_URL="http://localhost:$BACKEND_PORT"
 
 case "$COMPASS_ENV" in
   DEV|STAGING|PROD) ;;

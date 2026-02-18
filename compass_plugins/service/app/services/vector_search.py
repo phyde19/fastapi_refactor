@@ -1,11 +1,6 @@
-from __future__ import annotations
-
-import logging
 from typing import Any
 
 from app.config.settings import settings
-
-logger = logging.getLogger("compass_plugins.vector_search")
 
 
 def _safe_preview(text: str, limit: int = 180) -> str:
@@ -87,7 +82,6 @@ class VectorSearchService:
             )
             rows = _extract_rows(raw)
         except Exception:
-            logger.exception("Vector search failed plugin_id=%s", plugin_id)
             return []
 
         citations: list[dict[str, Any]] = []

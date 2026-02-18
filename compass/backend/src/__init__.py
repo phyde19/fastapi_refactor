@@ -1,1 +1,0 @@
-"""Compass Hub backend package."""

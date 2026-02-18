@@ -7,17 +7,13 @@ Logical groups:
   3) /chats           - chat completion proxy to external plugin services
 """
 
-from __future__ import annotations
-
 import json
-import logging
-from typing import Any, Literal, Optional
+from typing import Any, Optional
 from uuid import uuid4
 
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel, Field
 
 from config.service_resolver import ServiceResolverError, resolver
 from config.settings import settings
@@ -37,8 +33,9 @@ from plugin_registry.models import (
 )
 from plugin_registry.registry import plugin_registry
 from routers.auth import get_current_user, session_db
-
-logger = logging.getLogger("compass.routers.plugins")
+from schemas.chat import ChatCompletionRequest, ChatMessage, UserInputValue
+from schemas.frames import ErrorFrame
+from schemas.plugin_service import PluginServiceRequest
 
 
 def _get_roles(user: dict[str, str]) -> list[str]:
@@ -106,12 +103,6 @@ async def get_plugin_catalog(
         for plugin in group.plugins:
             routable = _is_plugin_routable(plugin)
             if not include_unroutable and not routable:
-                logger.info(
-                    "Filtering unroutable plugin from menu ws=%s plugin=%s key=%s",
-                    plugin.workspace_id,
-                    plugin.plugin_id,
-                    plugin.service_key,
-                )
                 continue
             entry = PluginMenuEntry.from_record(plugin)
             entry.has_service = routable
@@ -231,64 +222,6 @@ chat_router = APIRouter(
     prefix="/chats",
     tags=["chats"],
 )
-
-
-class ChatMessage(BaseModel):
-    role: Literal["user", "assistant", "system"]
-    content: str
-
-
-class UserInputValue(BaseModel):
-    name: str
-    value: Any
-
-
-class ChatCompletionRequest(BaseModel):
-    workspace: Optional[str] = None
-    plugin: Optional[str] = None
-    conversation: list[ChatMessage]
-    user_inputs: list[UserInputValue] = Field(default_factory=list)
-
-
-class PluginServiceRequest(BaseModel):
-    """
-    Contract between Compass Hub and plugin service.
-
-    Contract version v1 is the first stable external plugin contract.
-    """
-
-    contract_version: Literal["v1"] = "v1"
-    request_id: str
-    plugin_id: str
-    workspace_id: str
-    conversation_id: str
-    user_email: str
-    roles: list[str]
-    conversation: list[dict[str, str]]
-    user_inputs: list[dict[str, Any]]
-    instructions: str
-    conversation_seed: list[dict[str, str]]
-    user_inputs_schema: list[dict[str, Any]]
-
-
-class BaseFrame(BaseModel):
-    def serialize(self) -> str:
-        return f"{self.model_dump_json()}\n"
-
-
-class LLMFrame(BaseFrame):
-    type: Literal["llm"] = "llm"
-    content: str
-
-
-class CitationFrame(BaseFrame):
-    type: Literal["citation"] = "citation"
-    content: dict[str, Any]
-
-
-class ErrorFrame(BaseFrame):
-    type: Literal["error"] = "error"
-    content: dict[str, Any]
 
 
 @chat_router.post(
@@ -519,11 +452,7 @@ async def _proxy_plugin_stream(
                         yield normalized_line
                         break
                     else:
-                        logger.warning(
-                            "Skipping unknown frame type request_id=%s frame=%s",
-                            request_id,
-                            frame,
-                        )
+                        pass
     except httpx.ConnectError:
         terminal_error = {
             "code": "UPSTREAM_CONNECTION_ERROR",
@@ -549,11 +478,6 @@ async def _proxy_plugin_stream(
         }
         yield ErrorFrame(content=terminal_error).serialize()
     except Exception as exc:  # pragma: no cover - defensive fallback
-        logger.exception(
-            "Unexpected proxy failure request_id=%s service_url=%s",
-            request_id,
-            service_url,
-        )
         terminal_error = {
             "code": "HUB_PROXY_ERROR",
             "message": "Compass Hub failed while proxying plugin response.",
@@ -575,14 +499,3 @@ async def _proxy_plugin_stream(
                 error_payload=terminal_error,
                 position=len(conv_messages),
             )
-
-        logger.info(
-            "Chat completed request_id=%s conv=%s plugin=%s/%s chars=%d citations=%d terminal_error=%s",
-            request_id,
-            conversation_id,
-            plugin.workspace_id,
-            plugin.plugin_id,
-            len(assistant_content),
-            len(citations),
-            bool(terminal_error),
-        )

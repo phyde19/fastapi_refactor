@@ -7,9 +7,7 @@ source "$SCRIPT_DIR/load-ports.sh"
 
 FRONTEND_HOST="0.0.0.0"
 
-echo "Starting Compass Frontend with:"
-echo "  FRONTEND_PORT=$FRONTEND_PORT"
-echo "  NEXT_PUBLIC_COMPASS_API_BASE_URL=${NEXT_PUBLIC_COMPASS_API_BASE_URL:-http://localhost:$BACKEND_PORT}"
+echo "Starting Compass Frontend (PORT_OFFSET=${PORT_OFFSET}) on :${FRONTEND_PORT}"
 
 podman build -t compass-refactor-frontend:dev "$PROJECT_ROOT/frontend"
 
@@ -19,6 +17,6 @@ podman run \
   --network host \
   -v "$PROJECT_ROOT/frontend:/app:Z" \
   -w /app \
-  -e NEXT_PUBLIC_COMPASS_API_BASE_URL="${NEXT_PUBLIC_COMPASS_API_BASE_URL:-http://localhost:$BACKEND_PORT}" \
+  -e NEXT_PUBLIC_COMPASS_API_BASE_URL="$NEXT_PUBLIC_COMPASS_API_BASE_URL" \
   compass-refactor-frontend:dev \
-  npm run dev -- -H "$FRONTEND_HOST" -p "$FRONTEND_PORT"
+  sh -c "npm install && exec npm run dev -- -H $FRONTEND_HOST -p $FRONTEND_PORT"

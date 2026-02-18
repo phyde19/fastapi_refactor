@@ -61,9 +61,6 @@ updates = {
     "PLUGIN_REGISTRY_SOURCE": f'"{mode}"',
     "PLUGIN_SERVICES_LOCAL_FILE": '"./services.local.json"',
     "PLUGIN_REGISTRY_LOCAL_FILE": '"./plugins.local.json"',
-    "FRONTEND_URL": '"http://localhost:3000"',
-    "NEXT_PUBLIC_COMPASS_API_BASE_URL": '"http://localhost:8000"',
-    "SERVICE_URL_COMPASS_PLUGINS": '"http://localhost:5002"',
 }
 
 for key, value in updates.items():

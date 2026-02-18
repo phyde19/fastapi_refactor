@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Literal
 
@@ -25,9 +23,12 @@ class Settings(BaseSettings):
     plugin_services_local_file: str = "./services.local.json"
     plugin_registry_local_file: str = "./plugins.local.json"
 
+    # CORS
+    frontend_url: str = "http://localhost:3000"
+
     # Redis (sessions on DB0, plugin cache on DB1)
     redis_host: str = "127.0.0.1"
-    redis_port: int = 6379
+    redis_port: int = 6000
     redis_session_db: int = 0
     redis_plugin_cache_db: int = 1
 
@@ -41,7 +42,7 @@ class Settings(BaseSettings):
     plugin_stream_connect_timeout_seconds: float = 10.0
 
     model_config = SettingsConfigDict(
-        env_file=Path(__file__).parent.parent.parent / ".env",
+        env_file=Path(__file__).parent.parent.parent.parent / ".env",
         case_sensitive=False,
         extra="ignore",
     )

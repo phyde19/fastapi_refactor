@@ -4,14 +4,9 @@ Plugin Registry Auth Helpers
 Single source of truth for role -> workspace mapping logic.
 """
 
-from __future__ import annotations
-
-import logging
 from typing import Optional
 
 from config.settings import settings
-
-logger = logging.getLogger("compass.plugin_registry.auth")
 
 
 # Roles that bypass workspace filtering entirely
@@ -52,7 +47,7 @@ def get_user_roles(session_db, user_email: str) -> list[str]:
         raw = session_db.hget(user_email, "roles") or ""
         roles = [role.strip() for role in raw.split(",") if role.strip()]
     except Exception:  # pragma: no cover - depends on runtime Redis availability
-        logger.exception("Role lookup failed for user=%s", user_email)
+        pass
 
     if roles:
         return roles

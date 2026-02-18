@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-pydantic
-pydantic-settings
-openai
-databricks-vectorsearch
+fastapi>=0.115,<1
+uvicorn>=0.32,<1
+pydantic>=2.10,<3
+pydantic-settings>=2.7,<3
+openai>=1.58,<2
+databricks-vectorsearch>=0.40,<1
