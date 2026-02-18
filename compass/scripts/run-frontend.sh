@@ -9,7 +9,7 @@ FRONTEND_HOST="0.0.0.0"
 
 echo "Starting Compass Frontend (PORT_OFFSET=${PORT_OFFSET}) on :${FRONTEND_PORT}"
 
-podman build -t compass-refactor-frontend:dev "$PROJECT_ROOT/frontend"
+podman build --target dev -t compass-refactor-frontend:dev "$PROJECT_ROOT/frontend"
 
 podman run \
   --rm \
